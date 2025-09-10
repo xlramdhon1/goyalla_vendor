@@ -38,23 +38,17 @@ class _VendorDashboardState extends State<VendorDashboard> {
   void initState() {
     super.initState();
     _pullToRefreshController = PullToRefreshController(
-      options: PullToRefreshOptions(color: Colors.blue),
+      settings: PullToRefreshSettings(
+        // ✅ pakai settings
+        color: Colors.blue,
+      ),
       onRefresh: () async {
-        // NOTE: canReload() tidak tersedia -> langsung reload()
         if (_webViewController != null) {
-          try {
-            await _webViewController!.reload();
-          } catch (e) {
-            // kalau gagal, hentikan animasi refresh agar tidak macet
-            _pullToRefreshController.endRefreshing();
-          }
-        } else {
-          _pullToRefreshController.endRefreshing();
+          await _webViewController!.reload();
         }
       },
     );
 
-    // restore cookies sebelum WebView load
     _restoreCookies();
   }
 
@@ -103,16 +97,17 @@ class _VendorDashboardState extends State<VendorDashboard> {
                 _webViewController = controller;
               },
               onLoadStop: (controller, url) async {
-                // simpan cookie & hentikan animasi refresh
                 await _saveCookies();
                 _pullToRefreshController.endRefreshing();
                 setState(() => isLoading = false);
               },
-              onLoadError: (controller, url, code, message) {
+              onReceivedError: (controller, request, error) {
+                // ✅ pakai ini
                 _pullToRefreshController.endRefreshing();
                 setState(() => isLoading = false);
               },
-              onLoadHttpError: (controller, url, statusCode, description) {
+              onReceivedHttpError: (controller, request, errorResponse) {
+                // ✅ pakai ini
                 _pullToRefreshController.endRefreshing();
                 setState(() => isLoading = false);
               },
