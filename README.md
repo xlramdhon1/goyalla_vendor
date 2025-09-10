@@ -1,7 +1,3 @@
-# goyalla_vendor
-
-A new Flutter project.
-
 ## Project Overview
 
 **goyalla_vendor** is a Flutter application designed for vendor management. This project aims to provide a seamless experience for vendors to manage their products, orders, and profile within the Goyalla ecosystem.
